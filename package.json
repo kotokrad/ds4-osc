@@ -1,0 +1,31 @@
+{
+  "name": "ds4-osc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.ts",
+  "type": "module",
+  "scripts": {
+    "start": "ts-node --transpile-only src/main.ts",
+    "dev": "nodemon --exec ts-node src/main.ts",
+    "dev-js": "nodemon src/main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dualshock": "^3.1.7",
+    "node-osc": "^8.0.12"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.2",
+    "@types/node-osc": "^6.0.1",
+    "nodemon": "^3.0.1",
+    "prettier": "^3.0.0",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.1.6"
+  },
+  "prettier": {
+    "singleQuote": false
+  }
+}

@@ -1,5 +1,14 @@
 import * as ds from "dualshock";
 import { Bundle, Client, Server } from "node-osc";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const CLIENT_HOST = process.env.CLIENT_HOST || "127.0.0.1";
+const CLIENT_PORT = Number(process.env.CLIENT_PORT) || 12000;
+
+const SERVER_HOST = process.env.SERVER_HOST || "127.0.0.1";
+const SERVER_PORT = Number(process.env.SERVER_PORT) || 9000;
 
 const devices = ds.getDevices();
 
@@ -13,8 +22,12 @@ const gamepad = ds.open(devices[0]);
 console.log(`Found device: ${devices[0].product} [${devices[0].serialNumber}]`);
 console.log(`Battery: ${(gamepad.map.status.battery / 16) * 100}%`);
 
-const client = new Client("127.0.0.1", 12021);
-var server = new Server(9009, "127.0.0.1");
+const client = new Client(CLIENT_HOST, CLIENT_PORT);
+const server = new Server(SERVER_PORT, SERVER_HOST, () => {
+  console.log(`OSC Server is listening on ${SERVER_HOST}:${SERVER_PORT}`);
+});
+
+console.log(`OSC Client: ${CLIENT_HOST}:${CLIENT_PORT}`);
 
 const updateHandler = () => {
   const bundle = new Bundle();

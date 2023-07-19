@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.3.1",
     "dualshock": "^3.1.7",
     "node-osc": "^8.0.12"
   },

@@ -1,6 +1,8 @@
 import * as ds from "dualshock";
 import { Bundle, Client, Server } from "node-osc";
-import dotenv from "dotenv";
+import * as dotenv from "dotenv";
+import type { Device, LedState, RumbleState } from "dualshock";
+import { sleep } from "./util";
 
 dotenv.config();
 
@@ -10,17 +12,24 @@ const CLIENT_PORT = Number(process.env.CLIENT_PORT) || 12000;
 const SERVER_HOST = process.env.SERVER_HOST || "127.0.0.1";
 const SERVER_PORT = Number(process.env.SERVER_PORT) || 9000;
 
-const devices = ds.getDevices();
-
-if (devices.length === 0) {
-  console.log("No devices found.");
-  process.exit();
+async function getDevice(): Promise<Device> {
+  const devices = ds.getDevices();
+  if (devices[0]) {
+    console.log(
+      `Found device: ${devices[0].product} [${devices[0].serialNumber}]`,
+    );
+    return devices[0];
+  } else {
+    console.log("Device not found. Retrying...");
+    await sleep(2000);
+    return getDevice();
+  }
 }
 
-const gamepad = ds.open(devices[0]);
+const device = await getDevice();
+const gamepad = ds.open(device);
 
-console.log(`Found device: ${devices[0].product} [${devices[0].serialNumber}]`);
-console.log(`Battery: ${(gamepad.map.status.battery / 16) * 100}%`);
+console.log(`Battery: ${(gamepad.map.status.battery / 16) * 100}% (probably)`);
 
 const client = new Client(CLIENT_HOST, CLIENT_PORT);
 const server = new Server(SERVER_PORT, SERVER_HOST, () => {
@@ -77,16 +86,19 @@ server.on("message", (message) => {
   const [path, ...values] = message;
   console.log("👾", "message =>", message);
 
-  // RGB 0-255
-  // TODO: test with Chataigne's color value
+  // RGB 0-1
   if (path === "/ds4/color" && values.length === 3) {
-    gamepad.setLed(...values.map((value) => Math.round(value * 255)));
+    const state = values.map((value) =>
+      Math.round(Number(value) * 255),
+    ) as LedState;
+    gamepad.setLed(...state);
     return;
   }
 
   // Left, Right 0-255
   if (path === "/ds4/rumble" && values.length === 2) {
-    gamepad.rumble(...values);
+    const state = values as RumbleState;
+    gamepad.rumble(...state);
     return;
   }
 });

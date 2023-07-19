@@ -5,9 +5,8 @@
   "main": "src/main.ts",
   "type": "module",
   "scripts": {
-    "start": "ts-node --transpile-only src/main.ts",
-    "dev": "nodemon --exec ts-node src/main.ts",
-    "dev-js": "nodemon src/main.js"
+    "start": "esrun src/main.ts",
+    "dev": "nodemon --exec esrun src/main.ts"
   },
   "keywords": [],
   "author": "",
@@ -18,11 +17,11 @@
     "node-osc": "^8.0.12"
   },
   "devDependencies": {
+    "@digitak/esrun": "^3.2.24",
     "@types/node": "^20.4.2",
     "@types/node-osc": "^6.0.1",
     "nodemon": "^3.0.1",
     "prettier": "^3.0.0",
-    "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.6"
   },

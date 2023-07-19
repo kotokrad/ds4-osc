@@ -80,7 +80,7 @@ server.on("message", (message) => {
   // RGB 0-255
   // TODO: test with Chataigne's color value
   if (path === "/ds4/color" && values.length === 3) {
-    gamepad.setLed(...values);
+    gamepad.setLed(...values.map((value) => Math.round(value * 255)));
     return;
   }
 

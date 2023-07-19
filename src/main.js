@@ -3,6 +3,11 @@ import { Bundle, Client, Server } from "node-osc";
 
 const devices = ds.getDevices();
 
+if (devices.length === 0) {
+  console.log("No devices found.");
+  process.exit();
+}
+
 const gamepad = ds.open(devices[0]);
 
 console.log(`Found device: ${devices[0].product} [${devices[0].serialNumber}]`);
